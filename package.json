@@ -1,0 +1,21 @@
+{
+  "name": "be-videoedukasi",
+  "version": "1.0.0",
+  "description": "Backend eduvid",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "author": "Kharisma Sastrawansyah",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^3.1.7",
+    "express": "^4.18.2",
+    "mysql2": "^3.2.0",
+    "dotenv": "^16.0.3",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.0",
+    "body-parser": "^1.20.2"
+  }
+}
