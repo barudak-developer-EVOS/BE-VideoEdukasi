@@ -31,7 +31,7 @@ const accountController = {
         password: hashedPassword,
         role,
       });
-      res.status(201).json({ id: accountId });
+      res.status(201).json({ message: "Account Created successfully" });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
