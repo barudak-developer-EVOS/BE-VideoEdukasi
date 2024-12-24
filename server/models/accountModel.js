@@ -34,6 +34,14 @@ const Account = {
   async delete(id) {
     await db.query("DELETE FROM account WHERE account_id = ?", [id]);
   },
+
+  async getByEmail(email) {
+    const [rows] = await db.query(
+      "SELECT * FROM account WHERE account_email = ?",
+      [email]
+    );
+    return rows[0];
+  },
 };
 
 module.exports = Account;
