@@ -54,4 +54,7 @@ router.delete(
   videoController.delete
 ); // Menghapus video
 
+// Rute filter video
+router.post("/filter", videoController.filter);
+
 module.exports = router;
