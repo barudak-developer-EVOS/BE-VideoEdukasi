@@ -45,6 +45,39 @@ const Video = {
   async delete(id) {
     await db.query("DELETE FROM video WHERE video_id = ?", [id]);
   },
+
+  async filter(filters) {
+    const { educationLevel, subject, title, tutorId } = filters;
+
+    let query = "SELECT * FROM video WHERE 1=1";
+    const params = [];
+
+    if (educationLevel) {
+      query += " AND video_education_level = ?";
+      params.push(educationLevel);
+    }
+
+    if (subject) {
+      query += " AND video_subject = ?";
+      params.push(subject);
+    }
+
+    if (title) {
+      query += " AND video_title LIKE ?";
+      params.push(`%${title}%`);
+    }
+
+    if (tutorId) {
+      query += " AND account_id = ?";
+      params.push(tutorId);
+    }
+
+    console.log("Generated Query:", query);
+    console.log("Parameters:", params);
+
+    const [rows] = await db.query(query, params);
+    return rows;
+  },
 };
 
 module.exports = Video;
