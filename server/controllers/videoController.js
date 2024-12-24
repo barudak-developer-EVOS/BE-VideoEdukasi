@@ -111,6 +111,28 @@ const videoController = {
       res.status(500).json({ error: err.message });
     }
   },
+
+  async filter(req, res) {
+    try {
+      const { educationLevel, subject, title, tutorId } = req.query;
+
+      const videos = await Video.filter({
+        educationLevel,
+        subject,
+        title,
+        tutorId,
+      });
+
+      if (!videos || videos.length === 0) {
+        return res.status(404).json({ message: "No videos found" });
+      }
+
+      res.status(200).json(videos);
+    } catch (err) {
+      console.error("Error fetching videos:", err.message);
+      res.status(500).json({ error: "Server error" });
+    }
+  },
 };
 
 module.exports = videoController;
