@@ -28,8 +28,9 @@ const commentController = {
   async getByVideoId(req, res) {
     try {
       const { id: videoId } = req.params;
+      const { page = 1, limit = 10 } = req.query;
 
-      const comments = await Comment.getByVideoId(videoId);
+      const comments = await Comment.getByVideoId(videoId, page, limit);
       res.status(200).json(comments);
     } catch (err) {
       res.status(500).json({ error: err.message });
