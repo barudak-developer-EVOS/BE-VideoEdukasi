@@ -23,34 +23,42 @@ const videoController = {
 
   async create(req, res) {
     try {
-      const { title, description, url, thumbnail, educationLevel, subject } =
-        req.body;
+      const { title, description, educationLevel, subject } = req.body;
 
       // Periksa role
       if (req.user.role !== "tutor") {
         return res.status(403).json({ error: "Only tutors can upload videos" });
       }
 
-      // Validasi file atau URL
-      let videoUrl = url || null;
-      if (req.file) {
-        videoUrl = `${req.protocol}://${req.get("host")}/uploads/videos/${
-          req.file.filename
-        }`;
-      }
+      // Ambil file video dan thumbnail
+      const videoFile = req.files["videoFile"]
+        ? req.files["videoFile"][0]
+        : null;
+      const thumbnailFile = req.files["thumbnail"]
+        ? req.files["thumbnail"][0]
+        : null;
 
-      if (!videoUrl) {
+      // Validasi: File video dan thumbnail harus ada
+      if (!videoFile || !thumbnailFile) {
         return res
           .status(400)
-          .json({ error: "Either a video file or URL must be provided" });
+          .json({ error: "Both video and thumbnail files are required" });
       }
 
-      // Simpan video ke database
+      // Tentukan URL untuk file video dan thumbnail
+      const videoUrl = `${req.protocol}://${req.get("host")}/uploads/videos/${
+        videoFile.filename
+      }`;
+      const thumbnailUrl = `${req.protocol}://${req.get(
+        "host"
+      )}/uploads/thumbnails/${thumbnailFile.filename}`;
+
+      // Simpan data ke database
       const videoId = await Video.create({
         title,
         description,
         url: videoUrl,
-        thumbnail,
+        thumbnail: thumbnailUrl,
         educationLevel,
         subject,
         accountId: req.user.id,
@@ -111,26 +119,46 @@ const videoController = {
       res.status(500).json({ error: err.message });
     }
   },
-
-  async filter(req, res) {
+  // file by education level
+  async filterByEducationLevel(req, res) {
     try {
-      const { educationLevel, subject, title, tutorId } = req.query;
+      const { educationLevel } = req.query;
 
-      const videos = await Video.filter({
-        educationLevel,
-        subject,
-        title,
-        tutorId,
-      });
+      if (!educationLevel) {
+        return res.status(400).json({ error: "Education level is required" });
+      }
 
-      if (!videos || videos.length === 0) {
+      const videos = await Video.filterByEducationLevel(educationLevel);
+
+      if (videos.length === 0) {
         return res.status(404).json({ message: "No videos found" });
       }
 
       res.status(200).json(videos);
     } catch (err) {
-      console.error("Error fetching videos:", err.message);
-      res.status(500).json({ error: "Server error" });
+      res.status(500).json({ error: err.message });
+    }
+  },
+
+  async filterBySubject(req, res) {
+    try {
+      const { educationLevel, subject } = req.query;
+
+      if (!educationLevel || !subject) {
+        return res
+          .status(400)
+          .json({ error: "Education level and subject are required" });
+      }
+
+      const videos = await Video.filterBySubject(educationLevel, subject);
+
+      if (videos.length === 0) {
+        return res.status(404).json({ message: "No videos found" });
+      }
+
+      res.status(200).json(videos);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
     }
   },
 };
