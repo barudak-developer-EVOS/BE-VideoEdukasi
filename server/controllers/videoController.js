@@ -74,34 +74,50 @@ const videoController = {
 
   async update(req, res) {
     try {
-      const { title, description, url, thumbnail, educationLevel, subject } =
-        req.body;
+      const { title, description, educationLevel, subject } = req.body;
 
-      // Periksa apakah pengguna adalah tutor
       if (req.user.role !== "tutor") {
         return res.status(403).json({ error: "Only tutors can edit videos" });
       }
 
-      // Ambil data video lama dari database
+      // Ambil data lama
       const existingVideo = await Video.getById(req.params.id);
       if (!existingVideo) {
         return res.status(404).json({ error: "Video not found" });
       }
 
-      // Gunakan URL lama jika URL baru tidak diberikan
-      const videoUrl = url || existingVideo.video_url;
+      // Proses data file (jika ada)
+      const videoFile = req.files?.["videoFile"]
+        ? req.files["videoFile"][0]
+        : null;
+      const thumbnailFile = req.files?.["thumbnail"]
+        ? req.files["thumbnail"][0]
+        : null;
 
-      await Video.update(req.params.id, {
-        title,
-        description,
-        url: videoUrl,
-        thumbnail,
-        educationLevel,
-        subject,
-      });
+      // Gunakan data baru jika ada, atau gunakan data lama
+      const updatedVideo = {
+        title: title || existingVideo.video_title,
+        description: description || existingVideo.video_description,
+        url: videoFile
+          ? `${req.protocol}://${req.get("host")}/uploads/videos/${
+              videoFile.filename
+            }`
+          : existingVideo.video_url,
+        thumbnail: thumbnailFile
+          ? `${req.protocol}://${req.get("host")}/uploads/thumbnails/${
+              thumbnailFile.filename
+            }`
+          : existingVideo.video_thumbnail,
+        educationLevel: educationLevel || existingVideo.video_education_level,
+        subject: subject || existingVideo.video_subject,
+      };
+
+      // Jalankan update query
+      const result = await Video.update(req.params.id, updatedVideo);
 
       res.status(200).json({ message: "Video updated successfully" });
     } catch (err) {
+      console.error("Update Video Error:", err);
       res.status(500).json({ error: err.message });
     }
   },
