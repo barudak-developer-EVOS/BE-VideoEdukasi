@@ -13,6 +13,7 @@ const Video = {
     return rows[0];
   },
 
+  // Add the create method
   async create(video) {
     const {
       title,
@@ -42,40 +43,26 @@ const Video = {
     );
   },
 
+  // Add the delete method
   async delete(id) {
     await db.query("DELETE FROM video WHERE video_id = ?", [id]);
   },
 
-  async filter(filters) {
-    const { educationLevel, subject, title, tutorId } = filters;
+  // Add the filterByEducationLevel method
+  async filterByEducationLevel(educationLevel) {
+    const [rows] = await db.query(
+      "SELECT * FROM video WHERE video_education_level = ?",
+      [educationLevel]
+    );
+    return rows;
+  },
 
-    let query = "SELECT * FROM video WHERE 1=1";
-    const params = [];
-
-    if (educationLevel) {
-      query += " AND video_education_level = ?";
-      params.push(educationLevel);
-    }
-
-    if (subject) {
-      query += " AND video_subject = ?";
-      params.push(subject);
-    }
-
-    if (title) {
-      query += " AND video_title LIKE ?";
-      params.push(`%${title}%`);
-    }
-
-    if (tutorId) {
-      query += " AND account_id = ?";
-      params.push(tutorId);
-    }
-
-    console.log("Generated Query:", query);
-    console.log("Parameters:", params);
-
-    const [rows] = await db.query(query, params);
+  // Add the filterBySubject method
+  async filterBySubject(educationLevel, subject) {
+    const [rows] = await db.query(
+      "SELECT * FROM video WHERE video_education_level = ? AND video_subject = ?",
+      [educationLevel, subject]
+    );
     return rows;
   },
 };
