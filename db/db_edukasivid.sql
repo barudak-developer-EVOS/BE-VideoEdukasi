@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 24, 2024 at 09:53 AM
+-- Generation Time: Dec 25, 2024 at 07:18 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -44,7 +44,8 @@ CREATE TABLE `account` (
 INSERT INTO `account` (`account_id`, `account_name`, `account_email`, `account_password`, `role`, `account_created_at`, `account_updated_at`) VALUES
 (1, 'John Doe', 'john@example.com', '$2a$10$d5ddvC36CAQhlBeX6gLxBuYou5a1A3ULjNc2nmhuiibWGBru9wR02', 'student', '2024-12-12 04:10:48', '2024-12-12 04:10:48'),
 (2, 'Mamat Uncal', 'mamatuncal@example.com', '$2a$10$m9/2uKTUOBH7PBgUNnXNduN/v0jrO7aGUOBIlQeqdhdMNYA8nodUW', 'student', '2024-12-12 04:21:48', '2024-12-12 04:25:36'),
-(4, 'Abdul', 'tutor@example.com', '$2a$10$dH3DnTYNfBQ7egmf9bQCLeygcmCTP/ZYhpfMoHBpowRoZ2hmJXDw.', 'tutor', '2024-12-24 04:35:56', '2024-12-24 04:35:56');
+(4, 'Abdul', 'tutor@example.com', '$2a$10$dH3DnTYNfBQ7egmf9bQCLeygcmCTP/ZYhpfMoHBpowRoZ2hmJXDw.', 'tutor', '2024-12-24 04:35:56', '2024-12-24 04:35:56'),
+(5, 'Hapis', 'student@example.com', '$2a$10$KrqEM.QWgxSFc7gF6HJ.yeOAt/Bns67ac7p/rh.Y/FxbgC2597dFW', 'student', '2024-12-25 06:36:37', '2024-12-25 06:36:37');
 
 -- --------------------------------------------------------
 
@@ -59,6 +60,13 @@ CREATE TABLE `comment` (
   `video_id` int NOT NULL,
   `comment_created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `comment`
+--
+
+INSERT INTO `comment` (`comment_id`, `comment_content`, `account_id`, `video_id`, `comment_created_at`) VALUES
+(2, 'Ini adalah komentar', 4, 5, '2024-12-25 05:06:05');
 
 -- --------------------------------------------------------
 
@@ -79,16 +87,18 @@ CREATE TABLE `video` (
   `video_updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `likes` int DEFAULT '0',
   `dislikes` int DEFAULT '0',
-  `views` int NOT NULL,
-  `comment_id` int DEFAULT NULL
+  `views` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `video`
 --
 
-INSERT INTO `video` (`video_id`, `video_title`, `video_description`, `video_url`, `video_thumbnail`, `account_id`, `video_education_level`, `video_subject`, `video_created_at`, `video_updated_at`, `likes`, `dislikes`, `views`, `comment_id`) VALUES
-(1, 'Video Title', 'Description', 'https://www.youtube.com/watch?v=y7wplRy7w84', 'hayamhayam', 4, 'SMP', 'Matematika', '2024-12-24 04:48:46', '2024-12-24 04:48:46', 0, 0, 0, NULL);
+INSERT INTO `video` (`video_id`, `video_title`, `video_description`, `video_url`, `video_thumbnail`, `account_id`, `video_education_level`, `video_subject`, `video_created_at`, `video_updated_at`, `likes`, `dislikes`, `views`) VALUES
+(1, 'Video Title', 'Description', 'https://www.youtube.com/watch?v=y7wplRy7w84', 'hayamhayam', 4, 'SMP', 'Matematika', '2024-12-24 04:48:46', '2024-12-24 04:48:46', 0, 0, 0),
+(4, 'Bejalar IPAdasar', 'Konsep dasar IPA untuk siswa SMA', 'http://localhost:3000/uploads/videos/1735102190927-127065694-2024-12-12 11-24-14.mp4', 'http://localhost:3000/uploads/thumbnails/1735102191008-801681998-Usecase diagram.png', 4, 'SMA', 'IPA', '2024-12-25 04:49:51', '2024-12-25 04:49:51', 0, 0, 0),
+(5, 'Bejalar IPS dasar', 'Konsep dasar IPS untuk siswa SD', 'http://localhost:3000/uploads/videos/1735103015029-175375293-2024-12-12 11-24-14.mp4', 'http://localhost:3000/uploads/thumbnails/1735103015110-544405673-Usecase diagram.png', 4, 'SD', 'IPS', '2024-12-25 05:03:35', '2024-12-25 05:03:35', 0, 0, 0),
+(6, 'Belajar ingfi Lanjutan', 'Video untuk memahami matematika lanjutan', 'https://www.youtube.com/watch?v=updated_example', 'http://example.com/new_thumbnail.jpg', 4, 'SMA', 'Matematika', '2024-12-25 06:43:09', '2024-12-25 07:17:18', 0, 0, 0);
 
 --
 -- Indexes for dumped tables
@@ -114,8 +124,7 @@ ALTER TABLE `comment`
 --
 ALTER TABLE `video`
   ADD PRIMARY KEY (`video_id`),
-  ADD KEY `account_id` (`account_id`),
-  ADD KEY `fk_comment_id` (`comment_id`);
+  ADD KEY `account_id` (`account_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -125,19 +134,19 @@ ALTER TABLE `video`
 -- AUTO_INCREMENT for table `account`
 --
 ALTER TABLE `account`
-  MODIFY `account_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `account_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `comment_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `comment_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `video`
 --
 ALTER TABLE `video`
-  MODIFY `video_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `video_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
@@ -154,7 +163,6 @@ ALTER TABLE `comment`
 -- Constraints for table `video`
 --
 ALTER TABLE `video`
-  ADD CONSTRAINT `fk_comment_id` FOREIGN KEY (`comment_id`) REFERENCES `comment` (`comment_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `video_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`) ON DELETE CASCADE;
 COMMIT;
 
