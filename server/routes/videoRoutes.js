@@ -12,7 +12,10 @@ const router = express.Router();
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // Path ke folder src/uploads/videos
-    const uploadPath = path.join(__dirname, "../uploads/videos");
+    const uploadPath =
+      file.fieldname === "videoFile"
+        ? path.join(__dirname, "../uploads/videos")
+        : path.join(__dirname, "../uploads/thumbnails");
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
@@ -21,32 +24,46 @@ const storage = multer.diskStorage({
   },
 });
 
+// Middleware multer untuk multiple file upload
 const upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
-    if (!file.mimetype.startsWith("video/")) {
+    if (file.fieldname === "videoFile" && !file.mimetype.startsWith("video/")) {
       return cb(new Error("Only video files are allowed!"));
+    }
+    if (file.fieldname === "thumbnail" && !file.mimetype.startsWith("image/")) {
+      return cb(new Error("Only image files are allowed for thumbnails!"));
     }
     cb(null, true);
   },
 });
 
 // Rute CRUD Video
+
+// Public Routes
 router.get("/", videoController.getAll); // Mendapatkan semua video
+
 router.get("/:id", videoController.getById); // Mendapatkan detail video
+
+// Private Routes
 router.post(
   "/",
   authMiddleware,
   roleMiddleware("tutor"),
-  upload.single("videoFile"),
+  upload.fields([
+    { name: "videoFile", maxCount: 1 },
+    { name: "thumbnail", maxCount: 1 },
+  ]),
   videoController.create
 ); // Menambahkan video
+
 router.put(
   "/:id",
   authMiddleware,
   roleMiddleware("tutor"),
   videoController.update
 ); // Mengedit video
+
 router.delete(
   "/:id",
   authMiddleware,
@@ -55,6 +72,7 @@ router.delete(
 ); // Menghapus video
 
 // Rute filter video
-router.post("/filter", videoController.filter);
+router.get("/filter/educationLevel", videoController.filterByEducationLevel); // Filter video berdasarkan tingkat pendidikan
+router.get("/filter/subject", videoController.filterBySubject); // Filter video berdasarkan mata pelajaran
 
 module.exports = router;
