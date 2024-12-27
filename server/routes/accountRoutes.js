@@ -15,7 +15,7 @@ router.post("/", upload.single("profilePhoto"), accountController.create);
 // Protected routes
 router.get("/", authMiddleware, accountController.getAll);
 router.get("/:id", authMiddleware, accountController.getById);
-router.put("/:id", roleMiddleware, authMiddleware, accountController.update);
-router.delete("/:id", roleMiddleware, authMiddleware, accountController.delete);
+router.put("/:id", authMiddleware, roleMiddleware("tutor"), accountController.update);
+router.delete("/:id", authMiddleware, roleMiddleware("tutor"), accountController.delete);
 
 module.exports = router;
