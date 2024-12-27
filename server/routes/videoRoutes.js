@@ -7,12 +7,18 @@ const {
 const upload = require("../middleware/uploadMiddleware");
 const router = express.Router();
 
-// Rute CRUD Video
-
 // Public Routes
 router.get("/", videoController.getAll); // Mendapatkan semua video
-
 router.get("/:id", videoController.getById); // Mendapatkan detail video
+
+// routes filter video
+router.get("/filter/educationLevel", videoController.filterByEducationLevel); // Filter video berdasarkan tingkat pendidikan
+router.get("/filter/subject", videoController.filterBySubject); // Filter video berdasarkan mata pelajaran
+
+// routes untuk like dislike view
+router.post("/:id/view", authMiddleware,videoController.incrementViews); // Menambahkan view
+router.post("/:id/like", videoController.incrementLikes); // Menambahkan like
+router.post("/:id/dislike", authMiddleware, videoController.incrementDislikes); // Menambahkan dislike
 
 // Private Routes
 router.post(
@@ -40,8 +46,6 @@ router.delete(
   videoController.delete
 ); // Menghapus video
 
-// Rute filter video
-router.get("/filter/educationLevel", videoController.filterByEducationLevel); // Filter video berdasarkan tingkat pendidikan
-router.get("/filter/subject", videoController.filterBySubject); // Filter video berdasarkan mata pelajaran
+
 
 module.exports = router;
