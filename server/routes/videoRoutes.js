@@ -1,42 +1,11 @@
 const express = require("express");
-const multer = require("multer");
 const videoController = require("../controllers/videoController");
-const path = require("path");
 const {
   authMiddleware,
   roleMiddleware,
 } = require("../middleware/authMiddleware");
+const upload = require("../middleware/uploadMiddleware");
 const router = express.Router();
-
-// Konfigurasi Multer untuk upload file
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // Path ke folder src/uploads/videos
-    const uploadPath =
-      file.fieldname === "videoFile"
-        ? path.join(__dirname, "../uploads/videos")
-        : path.join(__dirname, "../uploads/thumbnails");
-    cb(null, uploadPath);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + "-" + file.originalname);
-  },
-});
-
-// Middleware multer untuk multiple file upload
-const upload = multer({
-  storage: storage,
-  fileFilter: (req, file, cb) => {
-    if (file.fieldname === "videoFile" && !file.mimetype.startsWith("video/")) {
-      return cb(new Error("Only video files are allowed!"));
-    }
-    if (file.fieldname === "thumbnail" && !file.mimetype.startsWith("image/")) {
-      return cb(new Error("Only image files are allowed for thumbnails!"));
-    }
-    cb(null, true);
-  },
-});
 
 // Rute CRUD Video
 
