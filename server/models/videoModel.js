@@ -65,6 +65,27 @@ const Video = {
     );
     return rows;
   },
+
+  // Add the view method
+  async incrementViews(videoId) {
+    await db.query("UPDATE video SET views = views + 1 WHERE video_id = ?", [
+      videoId,
+    ]);
+  },
+
+  // Add the like method
+  async incrementLikes(videoId) {
+    await db.query("UPDATE video SET likes = likes + 1 WHERE video_id = ?", [
+      videoId,
+    ]);
+  },
+
+  // Add the dislike method
+  async incrementDislikes(videoId) {
+    await db.query("UPDATE video SET dislikes = dislikes + 1 WHERE video_id = ?", [
+      videoId,
+    ]);
+  },
 };
 
 module.exports = Video;
