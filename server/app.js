@@ -2,9 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const accountRoutes = require("./routes/accountRoutes");
 const videoRoutes = require("./routes/videoRoutes");
+const commentRoutes = require("./routes/commentRoutes");
 const path = require("path");
 const app = express();
-const commentRoutes = require("./routes/commentRoutes");
 
 // Parsing JSON
 app.use(express.json());
