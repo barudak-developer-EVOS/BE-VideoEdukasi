@@ -29,11 +29,13 @@ const accountController = {
     try {
       const { name, email, password, role } = req.body;
       const hashedPassword = await bcrypt.hash(password, 10);
+      const profilePhotoPath = req.file ? req.file.path : null;
       const accountId = await Account.create({
         name,
         email,
         password: hashedPassword,
         role,
+        profilePhoto: profilePhotoPath,
       });
       res.status(201).json({ message: "Account Created successfully" });
     } catch (err) {
