@@ -12,7 +12,7 @@ Platform ini dirancang untuk mendukung pembelajaran daring dengan memungkinkan p
 
 - **Authentication & Authorization**:
   - Login dengan **JWT token**.
-  - Middleware untuk autentikasi dan peran pengguna (`admin`, `tutor`, `student`).
+  - Middleware untuk autentikasi dan peran pengguna (`tutor`, `student`).
 - **Account Management**:
   - CRUD akun pengguna.
   - Pengunggahan foto profil.
