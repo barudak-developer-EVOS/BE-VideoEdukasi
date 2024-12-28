@@ -177,6 +177,54 @@ const videoController = {
       res.status(500).json({ error: err.message });
     }
   },
+
+  async incrementViews(req, res) {
+    try {
+      const { id } = req.params;
+      const video = await Video.getById(id);
+
+      if (!video) {
+        return res.status(404).json({ error: "Video not found" });
+      }
+
+      await Video.incrementViews(id);
+      res.status(200).json({ message: "View count updated successfully" });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  },
+
+  async incrementLikes(req, res) {
+    try {
+      const { id } = req.params;
+      const video = await Video.getById(id);
+
+      if (!video) {
+        return res.status(404).json({ error: "Video not found" });
+      }
+
+      await Video.incrementLikes(id);
+      res.status(200).json({ message: "Like count updated successfully" });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  },
+
+  async incrementDislikes(req, res) {
+    try {
+      const { id } = req.params;
+      const video = await Video.getById(id);
+
+      if (!video) {
+        return res.status(404).json({ error: "Video not found" });
+      }
+
+      await Video.incrementDislikes(id);
+      res.status(200).json({ message: "Dislike count updated successfully" });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  },
 };
 
 module.exports = videoController;

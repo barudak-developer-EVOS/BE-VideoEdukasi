@@ -6,15 +6,86 @@ const {
 } = require("../middleware/authMiddleware");
 const router = express.Router();
 
-// Tambah komentar (akses untuk semua pengguna yang login)
-router.post("/", authMiddleware, commentController.create);
+/**
+ * @swagger
+ * tags:
+ *   name: Comments
+ *   description: Comment management
+ */
 
-// Lihat komentar pada video tertentu (akses publik)
-router.get("/video/:id", commentController.getByVideoId);
+/**
+ * @swagger
+ * /api/comments/comments:
+ *   post:
+ *     summary: Add a new comment
+ *     tags: [Comments]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               videoId:
+ *                 type: integer
+ *               content:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Comment added
+ *       401:
+ *         description: Unauthorized
+ */
+router.post("/comments", authMiddleware, commentController.create);
 
-// Hapus komentar (hanya untuk pemilik komentar atau tutor)
+/**
+ * @swagger
+ * /api/comments/comments/video/{id}:
+ *   get:
+ *     summary: Get comments by video ID
+ *     tags: [Comments]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Video ID
+ *     responses:
+ *       200:
+ *         description: List of comments
+ *       404:
+ *         description: Video not found
+ */
+router.get("/comments/video/:id", commentController.getByVideoId);
+
+/**
+ * @swagger
+ * /api/comments/comments/{id}:
+ *   delete:
+ *     summary: Delete comment by ID
+ *     tags: [Comments]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Comment ID
+ *     responses:
+ *       200:
+ *         description: Comment deleted
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Comment not found
+ */
 router.delete(
-  "/:id",
+  "/comments/:id",
   authMiddleware,
   roleMiddleware("tutor"),
   commentController.delete

@@ -15,10 +15,10 @@ const Account = {
   },
 
   async create(account) {
-    const { name, email, password, role } = account;
+    const { name, email, password, role, profilePhoto } = account;
     const [result] = await db.query(
-      "INSERT INTO account (account_name, account_email, account_password, role, account_created_at, account_updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())",
-      [name, email, password, role]
+      "INSERT INTO account (account_name, account_email, account_password, role, account_profile_photo, account_created_at, account_updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
+      [name, email, password, role, profilePhoto]
     );
     return result.insertId;
   },
