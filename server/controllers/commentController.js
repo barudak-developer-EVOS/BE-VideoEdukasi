@@ -11,6 +11,10 @@ const commentController = {
           .json({ error: "Content and videoId are required" });
       }
 
+      if (!content || content.trim().length === 0) {
+        return res.status(400).json({ error: "Content must not be empty" });
+      }      
+
       const commentId = await Comment.create({
         content,
         accountId: req.user.id,
@@ -40,14 +44,19 @@ const commentController = {
   async delete(req, res) {
     try {
       const { id: commentId } = req.params;
-
-      const isDeleted = await Comment.delete(commentId, req.user.id);
+  
+      // Periksa apakah pengguna adalah tutor
+      const isTutor = req.user.role === "tutor";
+  
+      // Hapus komentar (untuk tutor atau pemilik komentar)
+      const isDeleted = await Comment.delete(commentId, req.user.id, isTutor);
+  
       if (!isDeleted) {
         return res
           .status(403)
           .json({ error: "You are not authorized to delete this comment" });
       }
-
+  
       res.status(200).json({ message: "Comment deleted successfully" });
     } catch (err) {
       res.status(500).json({ error: err.message });
