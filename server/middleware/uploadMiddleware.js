@@ -1,6 +1,13 @@
 const multer = require("multer");
 const path = require("path");
 
+// Daftar ekstensi yang diizinkan untuk setiap jenis file
+const allowedExtensions = {
+  profilePhoto: [".jpg", ".jpeg", ".png"],
+  videoFile: [".mp4", ".mkv", ".avi"],
+  thumbnail: [".jpg", ".jpeg", ".png"],
+};
+
 // Konfigurasi penyimpanan file
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -22,17 +29,21 @@ const storage = multer.diskStorage({
   },
 });
 
-// Filter file berdasarkan tipe
+// Filter file berdasarkan tipe dan ekstensi
 const fileFilter = (req, file, cb) => {
-  if (file.fieldname === "profilePhoto" && !file.mimetype.startsWith("image/")) {
-    return cb(new Error("Only image files are allowed for profile photos!"), false);
+  const ext = path.extname(file.originalname).toLowerCase();
+
+  if (!allowedExtensions[file.fieldname]?.includes(ext)) {
+    return cb(
+      new Error(
+        `Invalid file type for ${
+          file.fieldname
+        }! Allowed extensions: ${allowedExtensions[file.fieldname].join(", ")}`
+      ),
+      false
+    );
   }
-  if (file.fieldname === "videoFile" && !file.mimetype.startsWith("video/")) {
-    return cb(new Error("Only video files are allowed!"), false);
-  }
-  if (file.fieldname === "thumbnail" && !file.mimetype.startsWith("image/")) {
-    return cb(new Error("Only image files are allowed for thumbnails!"), false);
-  }
+
   cb(null, true);
 };
 
