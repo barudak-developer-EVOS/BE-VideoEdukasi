@@ -72,8 +72,14 @@ Pastikan Anda memiliki perangkat lunak berikut:
    ```
 
 6. Jalankan server dalam mode produksi:
+
    ```bash
    npm start
+   ```
+
+7. Jalankan swagger dalam mode produksi:
+   ```bash
+   npm run swagger
    ```
 
 ---
@@ -189,5 +195,4 @@ Proyek ini dilisensikan di bawah **MIT License**. Lihat detailnya di [MIT Licens
 
 ## **Contributors**
 
-- **[Sastraaaa](https://github.com/Sastraaaa)**  
-  Backend Developer, API Architect
+- **[Sastraaaa](https://github.com/Sastraaaa)**
