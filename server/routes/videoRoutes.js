@@ -16,7 +16,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/videos/videos:
+ * /api/videos/getAll-videos:
  *   get:
  *     summary: Retrieve a list of videos
  *     tags: [Videos]
@@ -45,11 +45,11 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-router.get("/videos", videoController.getAll);
+router.get("/getAll-videos", videoController.getAll);
 
 /**
  * @swagger
- * /api/videos/videos/{id}:
+ * /api/videos/get-videos/{id}:
  *   get:
  *     summary: Retrieve a video by ID
  *     tags: [Videos]
@@ -68,11 +68,11 @@ router.get("/videos", videoController.getAll);
  *       500:
  *         description: Internal server error
  */
-router.get("/videos/:id", videoController.getById);
+router.get("/get-videos/:id", videoController.getById);
 
 /**
  * @swagger
- * /api/videos/videos:
+ * /api/videos/upload-videos:
  *   post:
  *     summary: Create a new video
  *     tags: [Videos]
@@ -116,7 +116,7 @@ router.get("/videos/:id", videoController.getById);
  *         description: Internal server error
  */
 router.post(
-  "/videos",
+  "/upload-videos",
   authMiddleware,
   roleMiddleware("tutor"),
   upload.fields([
@@ -128,7 +128,7 @@ router.post(
 
 /**
  * @swagger
- * /api/videos/videos/{id}:
+ * /api/videos/update-videos/{id}:
  *   put:
  *     summary: Update a video
  *     tags: [Videos]
@@ -169,7 +169,7 @@ router.post(
  *         description: Internal server error
  */
 router.put(
-  "/videos/:id",
+  "/update-videos/:id",
   authMiddleware,
   roleMiddleware("tutor"),
   upload.fields([
@@ -181,7 +181,7 @@ router.put(
 
 /**
  * @swagger
- * /api/videos/videos/{id}:
+ * /api/videos/delete-videos/{id}:
  *   delete:
  *     summary: Delete a video
  *     tags: [Videos]
@@ -203,7 +203,7 @@ router.put(
  *         description: Internal server error
  */
 router.delete(
-  "/videos/:id",
+  "/delete-videos/:id",
   authMiddleware,
   roleMiddleware("tutor"),
   videoController.delete
@@ -211,7 +211,7 @@ router.delete(
 
 /**
  * @swagger
- * /api/videos/filter/education:
+ * /api/videos/filter-by-education:
  *   get:
  *     summary: Filter videos by education level
  *     tags: [Videos]
@@ -232,18 +232,19 @@ router.delete(
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Video'
- *       400:
- *         description: Missing or invalid query parameter
+ *       422:
+ *         description: Invalid query parameter
  *       500:
  *         description: Internal server error
  */
-router.get("/videos/filter/education", videoController.filterByEducationLevel);
+
+router.get("/filter-by-education", videoController.filterByEducationLevel);
 
 /**
  * @swagger
- * /api/videos/filter/subject:
+ * /api/videos/filter-by-subject:
  *   get:
- *     summary: Filter videos by subject
+ *     summary: Filter videos by subject and education level
  *     tags: [Videos]
  *     parameters:
  *       - in: query
@@ -269,12 +270,13 @@ router.get("/videos/filter/education", videoController.filterByEducationLevel);
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Video'
- *       400:
- *         description: Missing or invalid query parameter
+ *       422:
+ *         description: Invalid query parameter
  *       500:
  *         description: Internal server error
  */
-router.get("/videos/filter/subject", videoController.filterBySubject);
+
+router.get("/filter-by-subject", videoController.filterBySubject);
 
 /**
  * @swagger
