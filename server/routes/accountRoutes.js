@@ -42,7 +42,7 @@ router.post("/auth/login", validateLogin, accountController.login);
 
 /**
  * @swagger
- * /api/accounts/accounts:
+ * /api/accounts/create-accounts:
  *   post:
  *     summary: Create a new account
  *     tags: [Accounts]
@@ -72,14 +72,14 @@ router.post("/auth/login", validateLogin, accountController.login);
  *         description: Bad request
  */
 router.post(
-  "/accounts",
+  "/create-accounts",
   upload.single("profilePhoto"),
   accountController.create
 );
 
 /**
  * @swagger
- * /api/accounts/accounts:
+ * /api/accounts/getAll-accounts:
  *   get:
  *     summary: Get all accounts
  *     tags: [Accounts]
@@ -92,7 +92,7 @@ router.post(
  *         description: Unauthorized
  */
 router.get(
-  "/accounts",
+  "/getAll-accounts",
   authMiddleware,
   roleMiddleware("tutor"),
   accountController.getAll
@@ -100,7 +100,7 @@ router.get(
 
 /**
  * @swagger
- * /api/accounts/accounts/{id}:
+ * /api/accounts/get-accounts/{id}:
  *   get:
  *     summary: Get account by ID
  *     tags: [Accounts]
@@ -122,7 +122,7 @@ router.get(
  *         description: Account not found
  */
 router.get(
-  "/accounts/:id",
+  "/get-accounts/:id",
   authMiddleware,
   roleMiddleware("tutor"),
   accountController.getById
@@ -130,7 +130,7 @@ router.get(
 
 /**
  * @swagger
- * /api/accounts/accounts/{id}:
+ * /api/accounts/update-accounts/{id}:
  *   put:
  *     summary: Update account by ID
  *     tags: [Accounts]
@@ -166,15 +166,16 @@ router.get(
  *         description: Account not found
  */
 router.put(
-  "/accounts/:id",
+  "/update-accounts/:id",
   authMiddleware,
   roleMiddleware("tutor"),
+  upload.single("profilePhoto"),
   accountController.update
 );
 
 /**
  * @swagger
- * /api/accounts/accounts/{id}:
+ * /api/accounts/delete-accounts/{id}:
  *   delete:
  *     summary: Delete account by ID
  *     tags: [Accounts]
@@ -196,7 +197,7 @@ router.put(
  *         description: Account not found
  */
 router.delete(
-  "/accounts/:id",
+  "/delete-accounts/:id",
   authMiddleware,
   roleMiddleware("tutor"),
   accountController.delete

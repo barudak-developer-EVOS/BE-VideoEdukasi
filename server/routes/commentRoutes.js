@@ -15,7 +15,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /api/comments/comments:
+ * /api/comments/add-comments:
  *   post:
  *     summary: Add a new comment
  *     tags: [Comments]
@@ -38,11 +38,11 @@ const router = express.Router();
  *       401:
  *         description: Unauthorized
  */
-router.post("/comments", authMiddleware, commentController.create);
+router.post("/add-comments", authMiddleware, commentController.create);
 
 /**
  * @swagger
- * /api/comments/comments/video/{id}:
+ * /api/comments/get-comments/video/{id}:
  *   get:
  *     summary: Get comments by video ID
  *     tags: [Comments]
@@ -59,11 +59,11 @@ router.post("/comments", authMiddleware, commentController.create);
  *       404:
  *         description: Video not found
  */
-router.get("/comments/video/:id", commentController.getByVideoId);
+router.get("/get-comments/video/:id", commentController.getByVideoId);
 
 /**
  * @swagger
- * /api/comments/comments/{id}:
+ * /api/comments/delete-comments/{id}:
  *   delete:
  *     summary: Delete comment by ID
  *     tags: [Comments]
@@ -85,7 +85,7 @@ router.get("/comments/video/:id", commentController.getByVideoId);
  *         description: Comment not found
  */
 router.delete(
-  "/comments/:id",
+  "/delete-comments/:id",
   authMiddleware,
   roleMiddleware("tutor"),
   commentController.delete

@@ -30,7 +30,9 @@ const accountController = {
       // Validasi role
       const validRoles = ["tutor", "student"];
       if (!validRoles.includes(role)) {
-        return res.status(400).json({ error: "Invalid role. Allowed values: tutor, student" });
+        return res
+          .status(400)
+          .json({ error: "Invalid role. Allowed values: tutor, student" });
       }
       const { name, email, password, role } = req.body;
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -52,7 +54,16 @@ const accountController = {
   async update(req, res) {
     try {
       const { name, email, role } = req.body;
-      await Account.update(req.params.id, { name, email, role });
+      const profilePhotoPath = req.file ? req.file.path : null;
+
+      const updatedAccount = {
+        name,
+        email,
+        role,
+        profilePhoto: profilePhotoPath,
+      };
+
+      await Account.update(req.params.id, updatedAccount);
       res.status(200).json({ message: "Account updated successfully" });
     } catch (err) {
       res.status(500).json({ error: err.message });
