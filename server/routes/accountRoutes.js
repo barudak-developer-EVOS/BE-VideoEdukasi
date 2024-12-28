@@ -169,6 +169,7 @@ router.put(
   "/accounts/:id",
   authMiddleware,
   roleMiddleware("tutor"),
+  upload.single("profilePhoto"),
   accountController.update
 );
 
