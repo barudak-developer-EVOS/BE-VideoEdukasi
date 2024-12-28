@@ -11,6 +11,8 @@ const swaggerSpec = require("./config/swaggerConfig");
 app.use(express.json()); // Parsing JSON
 app.use(express.urlencoded({ extended: true })); // Parsing URL-encoded form data
 app.use(bodyParser.json()); // Parsing JSON
+
+// Routes
 app.use("/api/accounts", accountRoutes); // Middleware for account routes
 app.use("/api/videos", videoRoutes); // Middleware for video routes
 app.use("/api/comments", commentRoutes); // Middleware for comment routes
