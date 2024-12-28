@@ -172,6 +172,10 @@ router.put(
   "/videos/:id",
   authMiddleware,
   roleMiddleware("tutor"),
+  upload.fields([
+    { name: "videoFile", maxCount: 1 },
+    { name: "thumbnail", maxCount: 1 },
+  ]),
   videoController.update
 );
 
