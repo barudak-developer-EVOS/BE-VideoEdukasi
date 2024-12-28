@@ -140,44 +140,60 @@ const videoController = {
     try {
       const { educationLevel } = req.query;
 
-      if (!educationLevel) {
-        return res.status(400).json({ error: "Education level is required" });
+      // Validasi parameter query
+      if (!educationLevel || !["SD", "SMP", "SMA"].includes(educationLevel)) {
+        return res
+          .status(422)
+          .json({ error: "Valid education level is required (SD, SMP, SMA)" });
       }
 
       const videos = await Video.filterByEducationLevel(educationLevel);
 
-      if (videos.length === 0) {
-        return res.status(404).json({ message: "No videos found" });
-      }
-
+      // Berikan respons meskipun tidak ada video
       res.status(200).json(videos);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   },
 
+  // file by subject
   async filterBySubject(req, res) {
     try {
       const { educationLevel, subject } = req.query;
 
-      if (!educationLevel || !subject) {
+      // Validasi parameter query
+      if (!educationLevel || !["SD", "SMP", "SMA"].includes(educationLevel)) {
         return res
-          .status(400)
-          .json({ error: "Education level and subject are required" });
+          .status(422)
+          .json({ error: "Valid education level is required (SD, SMP, SMA)" });
+      }
+      if (
+        !subject ||
+        ![
+          "PPKn",
+          "Bahasa Indonesia",
+          "Matematika",
+          "IPA",
+          "IPS",
+          "Agama",
+          "PJOK",
+        ].includes(subject)
+      ) {
+        return res.status(422).json({
+          error: "Valid subject is required (e.g., PPKn, Matematika, IPA)",
+        });
       }
 
       const videos = await Video.filterBySubject(educationLevel, subject);
 
-      if (videos.length === 0) {
-        return res.status(404).json({ message: "No videos found" });
-      }
-
+      // Berikan respons meskipun tidak ada video
       res.status(200).json(videos);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   },
 
+  // increment views
   async incrementViews(req, res) {
     try {
       const { id } = req.params;
