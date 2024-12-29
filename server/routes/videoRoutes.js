@@ -142,23 +142,47 @@ router.post(
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
  *               title:
  *                 type: string
+ *                 description: The title of the video
+ *                 example: My Updated Video
  *               description:
  *                 type: string
+ *                 description: The description of the video
+ *                 example: This is an updated description of the video
  *               educationLevel:
  *                 type: string
  *                 enum: [SD, SMP, SMA]
+ *                 description: The education level of the video
+ *                 example: SMA
  *               subject:
  *                 type: string
  *                 enum: [PPKn, Bahasa Indonesia, Matematika, IPA, IPS, Agama, PJOK]
+ *                 description: The subject of the video
+ *                 example: Matematika
+ *               videoFile:
+ *                 type: string
+ *                 format: binary
+ *                 description: The updated video file
+ *               thumbnail:
+ *                 type: string
+ *                 format: binary
+ *                 description: The updated thumbnail image
  *     responses:
  *       200:
  *         description: Video updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Video updated successfully
  *       400:
  *         description: Invalid request data
  *       403:
@@ -168,6 +192,7 @@ router.post(
  *       500:
  *         description: Internal server error
  */
+
 router.put(
   "/update-videos/:id",
   authMiddleware,
