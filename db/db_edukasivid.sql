@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 28, 2024 at 12:53 PM
+-- Generation Time: Jan 08, 2025 at 05:24 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -62,13 +62,6 @@ CREATE TABLE `comment` (
   `comment_created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `comment`
---
-
-INSERT INTO `comment` (`comment_id`, `comment_content`, `account_id`, `video_id`, `comment_created_at`) VALUES
-(2, 'Ini adalah komentar', 4, 5, '2024-12-25 05:06:05');
-
 -- --------------------------------------------------------
 
 --
@@ -96,10 +89,7 @@ CREATE TABLE `video` (
 --
 
 INSERT INTO `video` (`video_id`, `video_title`, `video_description`, `video_url`, `video_thumbnail`, `account_id`, `video_education_level`, `video_subject`, `video_created_at`, `video_updated_at`, `likes`, `dislikes`, `views`) VALUES
-(1, 'Video Title', 'Description', 'https://www.youtube.com/watch?v=y7wplRy7w84', 'hayamhayam', 4, 'SMP', 'Matematika', '2024-12-24 04:48:46', '2024-12-24 04:48:46', 0, 0, 0),
-(4, 'Bejalar IPAdasar', 'Konsep dasar IPA untuk siswa SMA', 'http://localhost:3000/uploads/videos/1735102190927-127065694-2024-12-12 11-24-14.mp4', 'http://localhost:3000/uploads/thumbnails/1735102191008-801681998-Usecase diagram.png', 4, 'SMA', 'IPA', '2024-12-25 04:49:51', '2024-12-25 04:49:51', 0, 0, 0),
-(5, 'Bejalar IPS dasar', 'Konsep dasar IPS untuk siswa SD', 'http://localhost:3000/uploads/videos/1735103015029-175375293-2024-12-12 11-24-14.mp4', 'http://localhost:3000/uploads/thumbnails/1735103015110-544405673-Usecase diagram.png', 4, 'SD', 'IPS', '2024-12-25 05:03:35', '2024-12-25 05:03:35', 0, 0, 0),
-(6, 'Belajar ingfi Lanjutan', 'Video untuk memahami matematika lanjutan', 'https://www.youtube.com/watch?v=updated_example', 'http://example.com/new_thumbnail.jpg', 4, 'SMA', 'Matematika', '2024-12-25 06:43:09', '2024-12-25 07:17:18', 0, 0, 0);
+(7, 'My Awesome Video', 'A description of the video', 'http://localhost:3000/uploads/videos/1736312260327-643641175-2024-12-25 08-31-37.mkv', 'http://localhost:3000/uploads/thumbnails/1736312260685-291208996-Screenshot 2024-12-31 062000.png', 4, 'SD', 'Bahasa Indonesia', '2025-01-08 04:57:40', '2025-01-08 04:57:40', 0, 0, 0);
 
 --
 -- Indexes for dumped tables
@@ -147,7 +137,7 @@ ALTER TABLE `comment`
 -- AUTO_INCREMENT for table `video`
 --
 ALTER TABLE `video`
-  MODIFY `video_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `video_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
