@@ -22,6 +22,80 @@ const options = {
       },
     ],
     components: {
+      schemas: {
+        Video: {
+          type: "object",
+          properties: {
+            video_id: {
+              type: "integer",
+              description: "Unique identifier for the video",
+            },
+            video_title: {
+              type: "string",
+              description: "Title of the video",
+            },
+            video_description: {
+              type: "string",
+              description: "Description of the video",
+            },
+            video_url: {
+              type: "string",
+              format: "url",
+              description: "URL of the video file",
+            },
+            video_thumbnail: {
+              type: "string",
+              format: "url",
+              description: "URL of the video's thumbnail",
+            },
+            video_education_level: {
+              type: "string",
+              enum: ["SD", "SMP", "SMA"],
+              description: "Education level of the video",
+            },
+            video_subject: {
+              type: "string",
+              enum: [
+                "PPKn",
+                "Bahasa Indonesia",
+                "Matematika",
+                "IPA",
+                "IPS",
+                "Agama",
+                "PJOK",
+              ],
+              description: "Subject of the video",
+            },
+            views: {
+              type: "integer",
+              description: "Number of views the video has",
+            },
+            likes: {
+              type: "integer",
+              description: "Number of likes the video has",
+            },
+            dislikes: {
+              type: "integer",
+              description: "Number of dislikes the video has",
+            },
+            account_id: {
+              type: "integer",
+              description: "ID of the user who uploaded the video",
+            },
+            video_created_at: {
+              type: "string",
+              format: "date-time",
+              description: "Timestamp when the video was created",
+            },
+            video_updated_at: {
+              type: "string",
+              format: "date-time",
+              description: "Timestamp when the video was last updated",
+            },
+          },
+          required: ["video_id", "video_title", "video_url", "video_thumbnail"],
+        },
+      },
       securitySchemes: {
         bearerAuth: {
           type: "http",

@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const accountRoutes = require("./routes/accountRoutes");
 const videoRoutes = require("./routes/videoRoutes");
 const commentRoutes = require("./routes/commentRoutes");
@@ -11,6 +12,9 @@ const swaggerSpec = require("./config/swaggerConfig");
 app.use(express.json()); // Parsing JSON
 app.use(express.urlencoded({ extended: true })); // Parsing URL-encoded form data
 app.use(bodyParser.json()); // Parsing JSON
+
+// Enable CORS
+app.use(cors());
 
 // Routes
 app.use("/api/accounts", accountRoutes); // Middleware for account routes
