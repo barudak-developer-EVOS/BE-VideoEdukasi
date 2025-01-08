@@ -77,7 +77,7 @@ Pastikan Anda memiliki perangkat lunak berikut:
    npm start
    ```
 
-7. Jalankan swagger dalam mode produksi:
+7. Jalankan swagger dalam mode pengembangan:
    ```bash
    npm run swagger
    ```
@@ -118,7 +118,7 @@ Contoh respons untuk endpoint:
 
 ### **2. Get All Videos**
 
-**Endpoint**: `GET /videos`  
+**Endpoint**: `GET /getAll-videos`  
 **Headers**:
 
 ```json
