@@ -6,12 +6,12 @@ const Account = {
     return rows;
   },
 
-  async getById(id) {
+  async getById(accountId) {
     const [rows] = await db.query(
       "SELECT * FROM account WHERE account_id = ?",
-      [id]
+      [accountId]
     );
-    return rows;
+    return rows[0] || null;
   },
 
   async create(account) {
