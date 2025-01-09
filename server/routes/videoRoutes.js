@@ -306,7 +306,7 @@ router.get("/filter-by-subject", videoController.filterBySubject);
 /**
  * @swagger
  * /api/videos/videos/{id}/view:
- *   post:
+ *   patch:
  *     summary: Increment video views
  *     tags: [Videos]
  *     parameters:
@@ -324,12 +324,13 @@ router.get("/filter-by-subject", videoController.filterBySubject);
  *       500:
  *         description: Internal server error
  */
-router.post("/videos/:id/view", videoController.incrementViews);
+
+router.patch("/videos/:id/view", videoController.incrementViews);
 
 /**
  * @swagger
  * /api/videos/videos/{id}/like:
- *   post:
+ *   patch:
  *     summary: Increment video likes
  *     tags: [Videos]
  *     parameters:
@@ -347,12 +348,13 @@ router.post("/videos/:id/view", videoController.incrementViews);
  *       500:
  *         description: Internal server error
  */
-router.post("/videos/:id/like", videoController.incrementLikes);
+
+router.patch("/videos/:id/like", videoController.incrementLikes);
 
 /**
  * @swagger
  * /api/videos/videos/{id}/dislike:
- *   post:
+ *   patch:
  *     summary: Increment video dislikes
  *     tags: [Videos]
  *     parameters:
@@ -370,6 +372,7 @@ router.post("/videos/:id/like", videoController.incrementLikes);
  *       500:
  *         description: Internal server error
  */
-router.post("/videos/:id/dislike", videoController.incrementDislikes);
+
+router.patch("/videos/:id/dislike", videoController.incrementDislikes);
 
 module.exports = router;
