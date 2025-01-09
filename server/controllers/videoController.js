@@ -204,12 +204,15 @@ const videoController = {
       }
 
       await Video.incrementViews(id);
-      res.status(200).json({ message: "View count updated successfully" });
+      res
+        .status(200)
+        .json({ message: "View count updated successfully", videoId: id });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   },
 
+  // increment likes
   async incrementLikes(req, res) {
     try {
       const { id } = req.params;
@@ -220,12 +223,15 @@ const videoController = {
       }
 
       await Video.incrementLikes(id);
-      res.status(200).json({ message: "Like count updated successfully" });
+      res
+        .status(200)
+        .json({ message: "Like count updated successfully", videoId: id });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   },
 
+  // increment dislikes
   async incrementDislikes(req, res) {
     try {
       const { id } = req.params;
@@ -236,7 +242,9 @@ const videoController = {
       }
 
       await Video.incrementDislikes(id);
-      res.status(200).json({ message: "Dislike count updated successfully" });
+      res
+        .status(200)
+        .json({ message: "Dislike count updated successfully", videoId: id });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
