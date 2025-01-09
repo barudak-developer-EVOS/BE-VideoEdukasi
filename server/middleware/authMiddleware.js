@@ -24,6 +24,11 @@ const authMiddleware = (req, res, next) => {
 
     next(); // Lanjutkan ke middleware berikutnya
   } catch (err) {
+    if (err.name === "TokenExpiredError") {
+      return res
+        .status(401)
+        .json({ error: "Token expired. Please login again" });
+    }
     res.status(400).json({ error: "Invalid token." });
   }
 };
