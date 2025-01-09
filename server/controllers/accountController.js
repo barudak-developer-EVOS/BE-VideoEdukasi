@@ -27,6 +27,7 @@ const accountController = {
   // method create
   async create(req, res) {
     try {
+      const { name, email, password, role } = req.body;
       // Validasi role
       const validRoles = ["tutor", "student"];
       if (!validRoles.includes(role)) {
@@ -34,7 +35,6 @@ const accountController = {
           .status(400)
           .json({ error: "Invalid role. Allowed values: tutor, student" });
       }
-      const { name, email, password, role } = req.body;
       const hashedPassword = await bcrypt.hash(password, 10);
       const profilePhotoPath = req.file ? req.file.path : null;
       const accountId = await Account.create({
