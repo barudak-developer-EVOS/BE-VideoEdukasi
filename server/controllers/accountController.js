@@ -101,7 +101,7 @@ const accountController = {
       const token = jwt.sign(
         { id: account.account_id, role: account.role },
         process.env.JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "365d" }
       );
 
       res.status(200).json({ token });
