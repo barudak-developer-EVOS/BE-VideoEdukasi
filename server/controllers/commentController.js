@@ -1,4 +1,6 @@
 const Comment = require("../models/commentModel");
+const Video = require("../models/videoModel");
+const Account = require("../models/accountModel");
 
 const commentController = {
   async create(req, res) {
@@ -6,9 +8,19 @@ const commentController = {
       const { content, videoId } = req.body;
 
       if (!content || !videoId) {
-        return res
-          .status(400)
-          .json({ error: "Content and videoId are required" });
+        return res.status(400).json({
+          statusCode: 400,
+          message: "Content and videoId are required",
+          data: null,
+        });
+      }
+
+      if (!content || content.trim().length === 0) {
+        return res.status(400).json({
+          statusCode: 400,
+          message: "Content must not be empty",
+          data: null,
+        });
       }
 
       const commentId = await Comment.create({
@@ -17,22 +29,78 @@ const commentController = {
         videoId,
       });
 
-      res
-        .status(201)
-        .json({ id: commentId, message: "Comment added successfully" });
+      res.status(201).json({
+        statusCode: 201,
+        message: "Comment added successfully",
+        data: { id: commentId },
+      });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      res.status(500).json({
+        statusCode: 500,
+        message: "Internal server error",
+        error: err.message,
+      });
     }
   },
 
   async getByVideoId(req, res) {
     try {
       const { id: videoId } = req.params;
+      const { page = 1, limit = 10 } = req.query;
 
-      const comments = await Comment.getByVideoId(videoId);
-      res.status(200).json(comments);
+      // Ambil komentar berdasarkan videoId
+      const comments = await Comment.getByVideoId(videoId, page, limit);
+
+      // Jika tidak ada komentar, kembalikan respons kosong
+      if (!comments.length) {
+        return res.status(200).json({
+          statusCode: 200,
+          message: "No comments found for this video",
+          data: {
+            video: null,
+            comments: [],
+          },
+        });
+      }
+
+      // Ambil data video berdasarkan videoId
+      const video = await Video.getById(videoId);
+      if (!video) {
+        return res.status(404).json({
+          statusCode: 404,
+          message: "Video not found",
+          data: null,
+        });
+      }
+
+      // Ambil data account untuk setiap komentar
+      const accountIds = [
+        ...new Set(comments.map((comment) => comment.accountId)),
+      ];
+      const accounts = await Promise.all(
+        accountIds.map((accountId) => Account.getById(accountId))
+      );
+
+      // Gabungkan data account dengan komentar
+      const enrichedComments = comments.map((comment) => {
+        const account = accounts.find((acc) => acc.id === comment.accountId);
+        return { ...comment, account };
+      });
+
+      res.status(200).json({
+        statusCode: 200,
+        message: "ok",
+        data: {
+          video,
+          comments: enrichedComments,
+        },
+      });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      res.status(500).json({
+        statusCode: 500,
+        message: "Internal server error",
+        error: err.message,
+      });
     }
   },
 
@@ -40,16 +108,31 @@ const commentController = {
     try {
       const { id: commentId } = req.params;
 
-      const isDeleted = await Comment.delete(commentId, req.user.id);
+      // Periksa apakah pengguna adalah tutor
+      const isTutor = req.user.role === "tutor";
+
+      // Hapus komentar (untuk tutor atau pemilik komentar)
+      const isDeleted = await Comment.delete(commentId, req.user.id, isTutor);
+
       if (!isDeleted) {
-        return res
-          .status(403)
-          .json({ error: "You are not authorized to delete this comment" });
+        return res.status(403).json({
+          statusCode: 403,
+          message: "You are not authorized to delete this comment",
+          data: null,
+        });
       }
 
-      res.status(200).json({ message: "Comment deleted successfully" });
+      res.status(200).json({
+        statusCode: 200,
+        message: "Comment deleted successfully",
+        data: null,
+      });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      res.status(500).json({
+        statusCode: 500,
+        message: "Internal server error",
+        error: err.message,
+      });
     }
   },
 };

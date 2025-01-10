@@ -28,12 +28,21 @@ const accountController = {
   async create(req, res) {
     try {
       const { name, email, password, role } = req.body;
+      // Validasi role
+      const validRoles = ["tutor", "student"];
+      if (!validRoles.includes(role)) {
+        return res
+          .status(400)
+          .json({ error: "Invalid role. Allowed values: tutor, student" });
+      }
       const hashedPassword = await bcrypt.hash(password, 10);
+      const profilePhotoPath = req.file ? req.file.path : null;
       const accountId = await Account.create({
         name,
         email,
         password: hashedPassword,
         role,
+        profilePhoto: profilePhotoPath,
       });
       res.status(201).json({ message: "Account Created successfully" });
     } catch (err) {
@@ -45,7 +54,16 @@ const accountController = {
   async update(req, res) {
     try {
       const { name, email, role } = req.body;
-      await Account.update(req.params.id, { name, email, role });
+      const profilePhotoPath = req.file ? req.file.path : null;
+
+      const updatedAccount = {
+        name,
+        email,
+        role,
+        profilePhoto: profilePhotoPath,
+      };
+
+      await Account.update(req.params.id, updatedAccount);
       res.status(200).json({ message: "Account updated successfully" });
     } catch (err) {
       res.status(500).json({ error: err.message });
@@ -83,7 +101,7 @@ const accountController = {
       const token = jwt.sign(
         { id: account.account_id, role: account.role },
         process.env.JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "365d" }
       );
 
       res.status(200).json({ token });
