@@ -49,6 +49,7 @@ INSERT INTO `account` (`account_id`, `account_name`, `account_email`, `account_p
 (2, 'Mamat Uncal', 'mamatuncal@example.com', '$2a$10$m9/2uKTUOBH7PBgUNnXNduN/v0jrO7aGUOBIlQeqdhdMNYA8nodUW', NULL, 'student', '2024-12-12 04:21:48', '2024-12-12 04:25:36'),
 (4, 'Abdul', 'tutor@example.com', '$2a$10$dH3DnTYNfBQ7egmf9bQCLeygcmCTP/ZYhpfMoHBpowRoZ2hmJXDw.', NULL, 'tutor', '2024-12-24 04:35:56', '2024-12-24 04:35:56'),
 (5, 'Hapis', 'student@example.com', '$2a$10$KrqEM.QWgxSFc7gF6HJ.yeOAt/Bns67ac7p/rh.Y/FxbgC2597dFW', NULL, 'student', '2024-12-25 06:36:37', '2024-12-25 06:36:37'),
+(6, 'jaguar', 'ejaguar@gmail.com', '$2a$10$ltUOKUzaLZEwYQE9BBAUPeyPO02QQwpHrsBhsfp1vpQyyh6akitzi', 'D:\\xampp\\htdocs\\BE-VideoEdukasi\\server\\uploads\\profile_photos\\1736426940936-409935783-5f6da653c1860.jpg', 'tutor', '2025-01-09 12:49:01', '2025-01-09 12:49:01'),
 (7, 'Putri', 'putri@gmail.com', '$2y$10$pTksRAmktphbsRRYA3ImceEPxoAMcH8PK40sa0NgyYqX71lNIGmbW', NULL, 'tutor', '2025-01-09 02:36:39', '2025-01-09 02:37:00'),
 (12, 'abdul', 'abdul10@gmail.com', '$2a$10$iK4PFxAdDFehix810bY1IO70HgArbYMJgUvqmLO5umqhzPsStNujK', 'C:\\Semester 5\\BE-VideoEdukasi\\server\\uploads\\profile_photos\\1736427339719-501082779-WhatsApp Image 2024-08-28 at 20.55.32_6ce453e3.jpg', 'tutor', '2025-01-09 12:55:39', '2025-01-09 12:55:39');
 
