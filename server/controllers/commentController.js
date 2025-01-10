@@ -3,6 +3,7 @@ const Video = require("../models/videoModel");
 const Account = require("../models/accountModel");
 
 const commentController = {
+  // Method create comment
   async create(req, res) {
     try {
       const { content, videoId } = req.body;
@@ -43,6 +44,7 @@ const commentController = {
     }
   },
 
+  // Method get all comments by id
   async getByVideoId(req, res) {
     try {
       const { id: videoId } = req.params;
@@ -104,6 +106,7 @@ const commentController = {
     }
   },
 
+  // Method delete comment
   async delete(req, res) {
     try {
       const { id: commentId } = req.params;
