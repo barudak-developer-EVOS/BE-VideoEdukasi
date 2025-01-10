@@ -3,6 +3,7 @@ const path = require("path");
 const Account = require("../models/accountModel");
 
 const videoController = {
+  // Method get all video
   async getAll(req, res) {
     try {
       const videos = await Video.getAll();
@@ -39,6 +40,7 @@ const videoController = {
     }
   },
 
+  // Method get video by id
   async getById(req, res) {
     try {
       const video = await Video.getById(req.params.id);
@@ -137,6 +139,7 @@ const videoController = {
     }
   },
 
+  // method update
   async update(req, res) {
     try {
       const { title, description, educationLevel, subject } = req.body;
@@ -194,6 +197,7 @@ const videoController = {
     }
   },
 
+  // method delete
   async delete(req, res) {
     try {
       if (req.user.role !== "tutor") {
