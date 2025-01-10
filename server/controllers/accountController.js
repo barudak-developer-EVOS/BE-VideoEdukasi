@@ -36,7 +36,11 @@ const accountController = {
           .json({ error: "Invalid role. Allowed values: tutor, student" });
       }
       const hashedPassword = await bcrypt.hash(password, 10);
-      const profilePhotoPath = req.file ? req.file.path : null;
+      const profilePhotoFile = req.files?.["profilePhotoFile"]?.[0];
+      const profilePhotoPath = `${req.protocol}://${req.get(
+        "host"
+      )}/uploads/profile_photos${profilePhotoFile.filename};`;
+
       const accountId = await Account.create({
         name,
         email,

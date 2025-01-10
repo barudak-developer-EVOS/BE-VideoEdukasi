@@ -1,11 +1,13 @@
 const db = require("../config/dbConfig");
 
 const Account = {
+  // Add the getAll method
   async getAll() {
     const [rows] = await db.query("SELECT * FROM account");
     return rows;
   },
 
+  // Add the getById method
   async getById(accountId) {
     const [rows] = await db.query(
       "SELECT * FROM account WHERE account_id = ?",
@@ -14,6 +16,7 @@ const Account = {
     return rows[0] || null;
   },
 
+  // Add the create method
   async create(account) {
     const { name, email, password, role, profilePhoto } = account;
     const [result] = await db.query(
@@ -23,6 +26,7 @@ const Account = {
     return result.insertId;
   },
 
+  // Add the update method
   async update(id, account) {
     const { name, email, role } = account;
     await db.query(
@@ -31,10 +35,12 @@ const Account = {
     );
   },
 
+  // Add the delete method
   async delete(id) {
     await db.query("DELETE FROM account WHERE account_id = ?", [id]);
   },
 
+  // Add the getByEmail method
   async getByEmail(email) {
     const [rows] = await db.query(
       "SELECT * FROM account WHERE account_email = ?",

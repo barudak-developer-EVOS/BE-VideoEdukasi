@@ -1,6 +1,7 @@
 const db = require("../config/dbConfig");
 
 const Comment = {
+  // Add the create method
   async create(comment) {
     const { content, accountId, videoId } = comment;
     const [result] = await db.query(
@@ -10,6 +11,7 @@ const Comment = {
     return result.insertId;
   },
 
+  // Add the getByVideoId method
   async getByVideoId(videoId, page = 1, limit = 10) {
     const offset = (page - 1) * limit;
     const [rows] = await db.query(
@@ -23,10 +25,11 @@ const Comment = {
     );
     return rows;
   },
-  
+
+  // Add the delete method
   async delete(commentId, accountId, isTutor = false) {
     let query, params;
-  
+
     if (isTutor) {
       // Tutor dapat menghapus komentar tanpa memeriksa pemiliknya
       query = "DELETE FROM comment WHERE comment_id = ?";
@@ -36,7 +39,7 @@ const Comment = {
       query = "DELETE FROM comment WHERE comment_id = ? AND account_id = ?";
       params = [commentId, accountId];
     }
-  
+
     const [result] = await db.query(query, params);
     return result.affectedRows > 0; // Return true jika berhasil
   },
