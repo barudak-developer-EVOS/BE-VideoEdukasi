@@ -51,7 +51,6 @@ const videoController = {
         });
       }
 
-      // Perkaya data video dengan data akun pemilik
       const account = await Account.getById(video.account_id);
 
       const enrichedVideo = {
