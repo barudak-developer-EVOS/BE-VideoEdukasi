@@ -38,7 +38,7 @@ const accountController = {
         });
       }
 
-      // Periksa keberadaan file
+      // Periksa path file
       const profilePhotoFile = req.file;
       if (!profilePhotoFile) {
         return res.status(400).json({
@@ -52,10 +52,9 @@ const accountController = {
         "host"
       )}/uploads/profile_photos/${profilePhotoFile.filename}`;
 
-      // Hash password
+      // Hash/encrypt password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Simpan data ke database
       const accountId = await Account.create({
         name,
         email,
