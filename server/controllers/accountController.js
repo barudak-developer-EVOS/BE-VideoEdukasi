@@ -28,29 +28,53 @@ const accountController = {
   async create(req, res) {
     try {
       const { name, email, password, role } = req.body;
+
       // Validasi role
       const validRoles = ["tutor", "student"];
       if (!validRoles.includes(role)) {
-        return res
-          .status(400)
-          .json({ error: "Invalid role. Allowed values: tutor, student" });
+        return res.status(400).json({
+          statusCode: 400,
+          message: "Invalid role. Allowed values: tutor, student",
+        });
       }
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const profilePhotoFile = req.files?.["profilePhotoFile"]?.[0];
-      const profilePhotoPath = `${req.protocol}://${req.get(
-        "host"
-      )}/uploads/profile_photos${profilePhotoFile.filename};`;
 
+      // Periksa keberadaan file
+      const profilePhotoFile = req.file;
+      if (!profilePhotoFile) {
+        return res.status(400).json({
+          statusCode: 400,
+          message: "Profile photo is required",
+        });
+      }
+
+      // Tentukan URL untuk file
+      const profilePhotoUrl = `${req.protocol}://${req.get(
+        "host"
+      )}/uploads/profile_photos/${profilePhotoFile.filename}`;
+
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Simpan data ke database
       const accountId = await Account.create({
         name,
         email,
         password: hashedPassword,
         role,
-        profilePhoto: profilePhotoPath,
+        profilePhoto: profilePhotoUrl,
       });
-      res.status(201).json({ message: "Account Created successfully" });
+
+      res.status(201).json({
+        statusCode: 201,
+        message: "Account created successfully",
+        data: { id: accountId },
+      });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      res.status(500).json({
+        statusCode: 500,
+        message: "Internal server error",
+        error: err.message,
+      });
     }
   },
 
