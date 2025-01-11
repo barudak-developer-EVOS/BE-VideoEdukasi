@@ -3,7 +3,7 @@ const path = require("path");
 
 // Daftar ekstensi yang diizinkan untuk setiap jenis file
 const allowedExtensions = {
-  profilePhoto: [".jpg", ".jpeg", ".png"],
+  profilePhotoFile: [".jpg", ".jpeg", ".png"],
   videoFile: [".mp4", ".mkv", ".avi"],
   thumbnail: [".jpg", ".jpeg", ".png"],
 };
@@ -12,7 +12,8 @@ const allowedExtensions = {
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     let uploadPath;
-    if (file.fieldname === "profilePhoto") {
+
+    if (file.fieldname === "profilePhotoFile") {
       uploadPath = path.join(__dirname, "../uploads/profile_photos");
     } else if (file.fieldname === "videoFile") {
       uploadPath = path.join(__dirname, "../uploads/videos");
@@ -21,6 +22,7 @@ const storage = multer.diskStorage({
     } else {
       return cb(new Error("Invalid file field name!"), false);
     }
+
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
@@ -38,7 +40,7 @@ const fileFilter = (req, file, cb) => {
       new Error(
         `Invalid file type for ${
           file.fieldname
-        }! Allowed extensions: ${allowedExtensions[file.fieldname].join(", ")}`
+        }! Allowed extensions: ${allowedExtensions[file.fieldname]?.join(", ")}`
       ),
       false
     );

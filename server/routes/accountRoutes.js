@@ -53,7 +53,7 @@ router.post("/auth/login", validateLogin, accountController.login);
  *           schema:
  *             type: object
  *             properties:
- *               profilePhoto:
+ *               profilePhotoFile:
  *                 type: string
  *                 format: binary
  *               name:
@@ -73,7 +73,7 @@ router.post("/auth/login", validateLogin, accountController.login);
  */
 router.post(
   "/create-accounts",
-  upload.single("profilePhoto"),
+  upload.single("profilePhotoFile"),
   accountController.create
 );
 
