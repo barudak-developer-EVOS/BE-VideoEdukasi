@@ -146,25 +146,35 @@ router.get(
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
+ *               profilePhotoFile:
+ *                 type: string
+ *                 format: binary
+ *                 description: Profile photo file to upload
  *               name:
  *                 type: string
+ *                 description: Account name
  *               email:
  *                 type: string
+ *                 description: Account email
  *               role:
  *                 type: string
  *                 enum: [tutor, student]
+ *                 description: Role of the account
  *     responses:
  *       200:
- *         description: Account updated
+ *         description: Account updated successfully
+ *       400:
+ *         description: Bad request
  *       401:
  *         description: Unauthorized
  *       404:
  *         description: Account not found
  */
+
 router.put(
   "/update-accounts/:id",
   authMiddleware,
