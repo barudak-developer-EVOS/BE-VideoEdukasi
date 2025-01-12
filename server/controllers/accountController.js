@@ -81,19 +81,49 @@ const accountController = {
   async update(req, res) {
     try {
       const { name, email, role } = req.body;
-      const profilePhotoPath = req.file ? req.file.path : null;
 
+      // Periksa apakah akun dengan ID tersebut ada
+      const existingAccount = await Account.getById(req.params.id);
+      if (!existingAccount) {
+        return res.status(404).json({
+          statusCode: 404,
+          message: "Account not found",
+          data: null,
+        });
+      }
+
+      // Proses file yang diunggah (jika ada)
+      const profilePhotoFile = req.file;
+
+      // Tentukan URL baru untuk foto profil jika ada file baru
+      const updatedProfilePhotoUrl = profilePhotoFile
+        ? `${req.protocol}://${req.get("host")}/uploads/profile_photos/${
+            profilePhotoFile.filename
+          }`
+        : existingAccount.account_profile_photo;
+
+      // Gunakan data baru jika ada, atau gunakan data lama jika tidak diubah
       const updatedAccount = {
-        name,
-        email,
-        role,
-        profilePhoto: profilePhotoPath,
+        name: name || existingAccount.account_name,
+        email: email || existingAccount.account_email,
+        role: role || existingAccount.role,
+        profilePhoto: updatedProfilePhotoUrl,
       };
 
+      // Perbarui data di database
       await Account.update(req.params.id, updatedAccount);
-      res.status(200).json({ message: "Account updated successfully" });
+
+      res.status(200).json({
+        statusCode: 200,
+        message: "Account updated successfully",
+        data: updatedAccount,
+      });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      res.status(500).json({
+        statusCode: 500,
+        message: "Internal server error",
+        error: err.message,
+      });
     }
   },
 

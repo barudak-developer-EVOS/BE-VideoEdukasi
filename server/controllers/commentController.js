@@ -44,7 +44,7 @@ const commentController = {
     }
   },
 
-  // Method get all comments by id
+  // Method get all comments by video id
   async getByVideoId(req, res) {
     try {
       const { id: videoId } = req.params;
@@ -75,26 +75,12 @@ const commentController = {
         });
       }
 
-      // Ambil data account untuk setiap komentar
-      const accountIds = [
-        ...new Set(comments.map((comment) => comment.accountId)),
-      ];
-      const accounts = await Promise.all(
-        accountIds.map((accountId) => Account.getById(accountId))
-      );
-
-      // Gabungkan data account dengan komentar
-      const enrichedComments = comments.map((comment) => {
-        const account = accounts.find((acc) => acc.id === comment.accountId);
-        return { ...comment, account };
-      });
-
       res.status(200).json({
         statusCode: 200,
         message: "ok",
         data: {
           video,
-          comments: enrichedComments,
+          comments,
         },
       });
     } catch (err) {
