@@ -168,8 +168,7 @@ router.get(
 router.put(
   "/update-accounts/:id",
   authMiddleware,
-  roleMiddleware("tutor"),
-  upload.single("profilePhoto"),
+  upload.single("profilePhotoFile"),
   accountController.update
 );
 
