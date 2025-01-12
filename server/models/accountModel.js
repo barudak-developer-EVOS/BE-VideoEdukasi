@@ -28,13 +28,12 @@ const Account = {
 
   // Add the update method
   async update(id, account) {
-    const { name, email, role } = account;
+    const { name, email, role, profilePhoto } = account;
     await db.query(
-      "UPDATE account SET account_name = ?, account_email = ?, role = ?, account_updated_at = NOW() WHERE account_id = ?",
-      [name, email, role, id]
+      "UPDATE account SET account_name = ?, account_email = ?, role = ?, account_profile_photo = ?, account_updated_at = NOW() WHERE account_id = ?",
+      [name, email, role, profilePhoto, id]
     );
   },
-
   // Add the delete method
   async delete(id) {
     await db.query("DELETE FROM account WHERE account_id = ?", [id]);
