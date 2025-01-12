@@ -13,17 +13,31 @@ const Comment = {
 
   // Add the getByVideoId method
   async getByVideoId(videoId, page = 1, limit = 10) {
+    if (isNaN(videoId) || isNaN(page) || isNaN(limit)) {
+      console.log("Invalid videoId, page, or limit");
+      return [];
+    }
+
     const offset = (page - 1) * limit;
-    const [rows] = await db.query(
-      `SELECT c.comment_id, c.comment_content, c.comment_created_at, a.account_name
-       FROM comment c
-       JOIN account a ON c.account_id = a.account_id
-       WHERE c.video_id = ?
-       ORDER BY c.comment_created_at DESC
-       LIMIT ? OFFSET ?`,
-      [videoId, limit, offset]
-    );
-    return rows;
+
+    try {
+      const [rows] = await db.query(
+        `SELECT c.comment_id, c.comment_content, c.comment_created_at, a.account_name
+         FROM comment c
+         JOIN account a ON c.account_id = a.account_id
+         WHERE c.video_id = ?
+         ORDER BY c.comment_created_at DESC
+         LIMIT ? OFFSET ?`,
+        [videoId, parseInt(limit), parseInt(offset)]
+      );
+
+      console.log("Comments fetched from database:", rows);
+
+      return rows;
+    } catch (err) {
+      console.error("Error fetching comments:", err.message);
+      return [];
+    }
   },
 
   // Add the delete method
