@@ -44,7 +44,6 @@ CREATE TABLE `account` (
 --
 
 INSERT INTO `account` (`account_id`, `account_name`, `account_email`, `account_password`, `account_profile_photo`, `role`, `account_created_at`, `account_updated_at`) VALUES
-INSERT INTO `account` (`account_id`, `account_name`, `account_email`, `account_password`, `account_profile_photo`, `role`, `account_created_at`, `account_updated_at`) VALUES
 (1, 'John Doe', 'john@example.com', '$2a$10$d5ddvC36CAQhlBeX6gLxBuYou5a1A3ULjNc2nmhuiibWGBru9wR02', NULL, 'student', '2024-12-12 04:10:48', '2024-12-12 04:10:48'),
 (2, 'Mamat Uncal', 'mamatuncal@example.com', '$2a$10$m9/2uKTUOBH7PBgUNnXNduN/v0jrO7aGUOBIlQeqdhdMNYA8nodUW', NULL, 'student', '2024-12-12 04:21:48', '2024-12-12 04:25:36'),
 (4, 'Abdul', 'tutor@example.com', '$2a$10$dH3DnTYNfBQ7egmf9bQCLeygcmCTP/ZYhpfMoHBpowRoZ2hmJXDw.', NULL, 'tutor', '2024-12-24 04:35:56', '2024-12-24 04:35:56'),
