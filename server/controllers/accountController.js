@@ -40,17 +40,13 @@ const accountController = {
 
       // Periksa path file
       const profilePhotoFile = req.file;
-      if (!profilePhotoFile) {
-        return res.status(400).json({
-          statusCode: 400,
-          message: "Profile photo is required",
-        });
-      }
 
-      // Tentukan URL untuk file
-      const profilePhotoUrl = `${req.protocol}://${req.get(
-        "host"
-      )}/uploads/profile_photos/${profilePhotoFile.filename}`;
+      // Tentukan URL untuk file (jika ada)
+      const profilePhotoUrl = profilePhotoFile
+        ? `${req.protocol}://${req.get("host")}/uploads/profile_photos/${
+            profilePhotoFile.filename
+          }`
+        : null;
 
       // Hash/encrypt password
       const hashedPassword = await bcrypt.hash(password, 10);
