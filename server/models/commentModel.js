@@ -22,7 +22,7 @@ const Comment = {
 
     try {
       const [rows] = await db.query(
-        `SELECT c.comment_id, c.comment_content, c.comment_created_at, a.account_name
+        `SELECT c.comment_id, c.comment_content, c.comment_created_at, a.account_name, a.account_profile_photo
          FROM comment c
          JOIN account a ON c.account_id = a.account_id
          WHERE c.video_id = ?
@@ -31,11 +31,8 @@ const Comment = {
         [videoId, parseInt(limit), parseInt(offset)]
       );
 
-      console.log("Comments fetched from database:", rows);
-
       return rows;
     } catch (err) {
-      console.error("Error fetching comments:", err.message);
       return [];
     }
   },
