@@ -91,12 +91,7 @@ router.post(
  *       401:
  *         description: Unauthorized
  */
-router.get(
-  "/getAll-accounts",
-  authMiddleware,
-  roleMiddleware("tutor"),
-  accountController.getAll
-);
+router.get("/getAll-accounts", authMiddleware, accountController.getAll);
 
 /**
  * @swagger
@@ -121,12 +116,7 @@ router.get(
  *       404:
  *         description: Account not found
  */
-router.get(
-  "/get-accounts/:id",
-  authMiddleware,
-  roleMiddleware("tutor"),
-  accountController.getById
-);
+router.get("/get-accounts/:id", authMiddleware, accountController.getById);
 
 /**
  * @swagger
