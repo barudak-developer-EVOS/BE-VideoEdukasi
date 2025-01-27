@@ -157,7 +157,14 @@ const accountController = {
         { expiresIn: "365d" }
       );
 
-      res.status(200).json({ token });
+      res.status(200).json({
+        token,
+        id: account.account_id,
+        accountName: account.account_name,
+        email: account.account_email,
+        role: account.role,
+        profilePhoto: account.account_profile_photo,
+      });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
