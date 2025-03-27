@@ -3,18 +3,203 @@ const accountController = require("../controllers/accountController");
 const router = express.Router();
 const {
   authMiddleware,
-  // roleMiddleware,
+  roleMiddleware,
 } = require("../middleware/authMiddleware");
+const upload = require("../middleware/uploadMiddleware");
 const { validateLogin } = require("../middleware/validationMiddleware");
 
-// Public routes
-router.post("/login", validateLogin, accountController.login);
-router.post("/", accountController.create);
+/**
+ * @swagger
+ * tags:
+ *   name: Accounts
+ *   description: Account management
+ */
 
-// Protected routes
-router.get("/", authMiddleware, accountController.getAll);
-router.get("/:id", authMiddleware, accountController.getById);
-router.put("/:id", authMiddleware, accountController.update);
-router.delete("/:id", authMiddleware, accountController.delete);
+/**
+ * @swagger
+ * /api/accounts/auth/login:
+ *   post:
+ *     summary: Login to the application
+ *     tags: [Accounts]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful login
+ *       401:
+ *         description: Unauthorized
+ */
+router.post("/auth/login", validateLogin, accountController.login);
+
+/**
+ * @swagger
+ * /api/accounts/create-accounts:
+ *   post:
+ *     summary: Create a new account
+ *     tags: [Accounts]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               profilePhotoFile:
+ *                 type: string
+ *                 format: binary
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [tutor, student]
+ *     responses:
+ *       201:
+ *         description: Account created
+ *       400:
+ *         description: Bad request
+ */
+router.post(
+  "/create-accounts",
+  upload.single("profilePhotoFile"),
+  accountController.create
+);
+
+/**
+ * @swagger
+ * /api/accounts/getAll-accounts:
+ *   get:
+ *     summary: Get all accounts
+ *     tags: [Accounts]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of accounts
+ *       401:
+ *         description: Unauthorized
+ */
+router.get("/getAll-accounts", authMiddleware, accountController.getAll);
+
+/**
+ * @swagger
+ * /api/accounts/get-accounts/{id}:
+ *   get:
+ *     summary: Get account by ID
+ *     tags: [Accounts]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Account ID
+ *     responses:
+ *       200:
+ *         description: Account data
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Account not found
+ */
+router.get("/get-accounts/:id", authMiddleware, accountController.getById);
+
+/**
+ * @swagger
+ * /api/accounts/update-accounts/{id}:
+ *   put:
+ *     summary: Update account by ID
+ *     tags: [Accounts]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Account ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               profilePhotoFile:
+ *                 type: string
+ *                 format: binary
+ *                 description: Profile photo file to upload
+ *               name:
+ *                 type: string
+ *                 description: Account name
+ *               email:
+ *                 type: string
+ *                 description: Account email
+ *               role:
+ *                 type: string
+ *                 enum: [tutor, student]
+ *                 description: Role of the account
+ *     responses:
+ *       200:
+ *         description: Account updated successfully
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Account not found
+ */
+
+router.put(
+  "/update-accounts/:id",
+  authMiddleware,
+  upload.single("profilePhotoFile"),
+  accountController.update
+);
+
+/**
+ * @swagger
+ * /api/accounts/delete-accounts/{id}:
+ *   delete:
+ *     summary: Delete account by ID
+ *     tags: [Accounts]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Account ID
+ *     responses:
+ *       200:
+ *         description: Account deleted
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Account not found
+ */
+router.delete(
+  "/delete-accounts/:id",
+  authMiddleware,
+  roleMiddleware("tutor"),
+  accountController.delete
+);
 
 module.exports = router;

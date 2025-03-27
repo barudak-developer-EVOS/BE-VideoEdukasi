@@ -28,16 +28,48 @@ const accountController = {
   async create(req, res) {
     try {
       const { name, email, password, role } = req.body;
+
+      // Validasi role
+      const validRoles = ["tutor", "student"];
+      if (!validRoles.includes(role)) {
+        return res.status(400).json({
+          statusCode: 400,
+          message: "Invalid role. Allowed values: tutor, student",
+        });
+      }
+
+      // Periksa path file
+      const profilePhotoFile = req.file;
+
+      // Tentukan URL untuk file (jika ada)
+      const profilePhotoUrl = profilePhotoFile
+        ? `${req.protocol}://${req.get("host")}/uploads/profile_photos/${
+            profilePhotoFile.filename
+          }`
+        : null;
+
+      // Hash/encrypt password
       const hashedPassword = await bcrypt.hash(password, 10);
+
       const accountId = await Account.create({
         name,
         email,
         password: hashedPassword,
         role,
+        profilePhoto: profilePhotoUrl,
       });
-      res.status(201).json({ message: "Account Created successfully" });
+
+      res.status(201).json({
+        statusCode: 201,
+        message: "Account created successfully",
+        data: { id: accountId },
+      });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      res.status(500).json({
+        statusCode: 500,
+        message: "Internal server error",
+        error: err.message,
+      });
     }
   },
 
@@ -45,10 +77,49 @@ const accountController = {
   async update(req, res) {
     try {
       const { name, email, role } = req.body;
-      await Account.update(req.params.id, { name, email, role });
-      res.status(200).json({ message: "Account updated successfully" });
+
+      // Periksa apakah akun dengan ID tersebut ada
+      const existingAccount = await Account.getById(req.params.id);
+      if (!existingAccount) {
+        return res.status(404).json({
+          statusCode: 404,
+          message: "Account not found",
+          data: null,
+        });
+      }
+
+      // Proses file yang diunggah (jika ada)
+      const profilePhotoFile = req.file;
+
+      // Tentukan URL baru untuk foto profil jika ada file baru
+      const updatedProfilePhotoUrl = profilePhotoFile
+        ? `${req.protocol}://${req.get("host")}/uploads/profile_photos/${
+            profilePhotoFile.filename
+          }`
+        : existingAccount.account_profile_photo;
+
+      // Gunakan data baru jika ada, atau gunakan data lama jika tidak diubah
+      const updatedAccount = {
+        name: name || existingAccount.account_name,
+        email: email || existingAccount.account_email,
+        role: role || existingAccount.role,
+        profilePhoto: updatedProfilePhotoUrl,
+      };
+
+      // Perbarui data di database
+      await Account.update(req.params.id, updatedAccount);
+
+      res.status(200).json({
+        statusCode: 200,
+        message: "Account updated successfully",
+        data: updatedAccount,
+      });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      res.status(500).json({
+        statusCode: 500,
+        message: "Internal server error",
+        error: err.message,
+      });
     }
   },
 
@@ -83,10 +154,17 @@ const accountController = {
       const token = jwt.sign(
         { id: account.account_id, role: account.role },
         process.env.JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "365d" }
       );
 
-      res.status(200).json({ token });
+      res.status(200).json({
+        token,
+        id: account.account_id,
+        accountName: account.account_name,
+        email: account.account_email,
+        role: account.role,
+        profilePhoto: account.account_profile_photo,
+      });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
